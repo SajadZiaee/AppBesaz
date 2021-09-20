@@ -6,30 +6,49 @@ import 'package:appbesaz/modules/siteModule.dart';
 import 'modules/callModule.dart';
 import 'package:appbesaz/modules/settingsModule.dart';
 
-int a = 0;
+import 'modules/constants.dart';
+
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return MyAppState();
+  }
+}
+
+class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-          primarySwatch: appbarColor,
-          
-          appBarTheme: AppBarTheme(color: appbarColor)),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+        primarySwatch: Colors.blue,
+        appBarTheme: AppBarTheme(color: appbarColor),
+        fontFamily: fonts[applicationFont],
+      ),
+      home: MyHomePage(
+        title: 'Flutter Demo Home Page',
+        myAppSetState: () {
+          this.setState(() {});
+        },
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  MyHomePage({
+    Key? key,
+    required this.title,
+    this.myAppSetState,
+  }) : super(key: key);
 
   final String title;
-
+  Function? myAppSetState;
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -85,9 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
               appBarColor: Colors.blue,
               backgroundColor: Colors.white,
               imageName: "",
-              mainSetState: () {
-                setState(() {});
-              },
+              myAppSetState: widget.myAppSetState,
             );
           });
         },

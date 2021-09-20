@@ -4,7 +4,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'constants.dart';
 
+// insert a global map here, so that all application settings can be accessed from that map.
+
 MaterialColor appbarColor = Colors.blue;
+int applicationFont = 0;
+
 List<SettingsModule> settingsModuleList = [];
 SettingsModule? findSettingsModuleById(int id) {
   for (SettingsModule a in settingsModuleList) {
@@ -14,6 +18,7 @@ SettingsModule? findSettingsModuleById(int id) {
   }
 }
 
+/// Settings module must be created only once. So...
 class SettingsModule extends Module {
   int font;
 
@@ -23,24 +28,24 @@ class SettingsModule extends Module {
   bool isBold;
 
   /// false: not bold, true: bold.
-
+  //// Item colors can also be changed in the whole application.
   Color textColor;
   Color appBarColor;
   Color backgroundColor;
   String imageName;
-  Function? mainSetState;
-  SettingsModule(
-      {required int id,
-      required int index,
-      required this.font,
-      required this.fontSize,
-      required this.isBold,
-      required this.textColor,
-      required this.appBarColor,
-      required this.backgroundColor,
-      required this.imageName,
-      this.mainSetState})
-      : super(id: id, index: index, type: 4) {
+  Function? myAppSetState;
+  SettingsModule({
+    required int id,
+    required int index,
+    required this.font,
+    required this.fontSize,
+    required this.isBold,
+    required this.textColor,
+    required this.appBarColor,
+    required this.backgroundColor,
+    required this.imageName,
+    this.myAppSetState,
+  }) : super(id: id, index: index, type: 4) {
     settingsModuleList.add(this);
   }
   @override
@@ -70,6 +75,7 @@ class SettingsModuleState extends State<SettingsModule> {
             height: 50,
             width: 300,
             child: ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemCount: fonts.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -78,14 +84,16 @@ class SettingsModuleState extends State<SettingsModule> {
                       fonts[index],
                       style: TextStyle(fontFamily: fonts[index]),
                     ),
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(),
+                    onPressed: () {
+                      // font must be selected for whole application.
+                      applicationFont = index;
+                    },
                   );
                 }),
           ),
           ElevatedButton(
               onPressed: () {
-                widget.mainSetState!();
+                widget.myAppSetState!();
               },
               child: Text('submit'))
         ],
