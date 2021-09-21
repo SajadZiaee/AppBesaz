@@ -26,6 +26,7 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        textTheme: TextTheme(button: TextStyle(fontWeight: FontWeight.normal)),
         primarySwatch: Colors.blue,
         appBarTheme: AppBarTheme(color: appbarColor),
         fontFamily: fonts[applicationFont],

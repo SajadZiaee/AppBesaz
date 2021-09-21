@@ -8,6 +8,7 @@ import 'constants.dart';
 
 MaterialColor appbarColor = Colors.blue;
 int applicationFont = 0;
+MaterialColor buttonColor = Colors.blue;
 
 List<SettingsModule> settingsModuleList = [];
 SettingsModule? findSettingsModuleById(int id) {
@@ -30,7 +31,8 @@ class SettingsModule extends Module {
   /// false: not bold, true: bold.
   //// Item colors can also be changed in the whole application.
   Color textColor;
-  Color appBarColor;
+  MaterialColor appBarColor;
+  MaterialColor buttonColor;
   Color backgroundColor;
   String imageName;
   Function? myAppSetState;
@@ -42,6 +44,7 @@ class SettingsModule extends Module {
     required this.isBold,
     required this.textColor,
     required this.appBarColor,
+    required this.buttonColor,
     required this.backgroundColor,
     required this.imageName,
     this.myAppSetState,
@@ -63,40 +66,82 @@ class SettingsModuleState extends State<SettingsModule> {
       appBar: AppBar(
         title: Text('Settings'),
       ),
-      body: Column(
-        children: [
-          ElevatedButton(
-              onPressed: () {
-                widget.appBarColor = Colors.orange;
-                appbarColor = Colors.orange;
-              },
-              child: Text('appbar orange')),
-          Container(
-            height: 50,
-            width: 300,
-            child: ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
+      body: Center(
+        child: Column(
+          children: [
+            Text(
+              'فونت نوشته های اپلیکیشن: ',
+              style: TextStyle(fontFamily: 'Shabnam'),
+            ),
+            Container(
+              height: 50,
+              width: 300,
+              child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: fonts.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ElevatedButton(
+                      child: Text(
+                        fonts[index],
+                        style: TextStyle(fontFamily: fonts[index]),
+                      ),
+                      onPressed: () {
+                        // font must be selected for whole application.
+                        applicationFont = index;
+                      },
+                    );
+                  }),
+            ),
+            Text('رنگ نوار بالای صفحه: ',
+                style: TextStyle(fontFamily: 'Shabnam')),
+            Container(
+              width: 300,
+              height: 30,
+              child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: fonts.length,
+                itemCount: appbarColors.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ElevatedButton(
-                    child: Text(
-                      fonts[index],
-                      style: TextStyle(fontFamily: fonts[index]),
-                    ),
                     onPressed: () {
-                      // font must be selected for whole application.
-                      applicationFont = index;
+                      widget.appBarColor = appbarColors[index];
+                      appbarColor = appbarColors[index];
                     },
+                    child: Text(''),
+                    style:
+                        ElevatedButton.styleFrom(primary: appbarColors[index]),
                   );
-                }),
-          ),
-          ElevatedButton(
-              onPressed: () {
-                widget.myAppSetState!();
-              },
-              child: Text('submit'))
-        ],
+                },
+              ),
+            ),
+            Text('رنگ دکمه های صفحه: ',
+                style: TextStyle(fontFamily: 'Shabnam')),
+            Container(
+              width: 300,
+              height: 30,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: appbarColors.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      widget.buttonColor = appbarColors[index];
+                      buttonColor = appbarColors[index];
+                    },
+                    child: Text(''),
+                    style:
+                        ElevatedButton.styleFrom(primary: appbarColors[index]),
+                  );
+                },
+              ),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  widget.myAppSetState!();
+                },
+                child: Text('submit'))
+          ],
+        ),
       ),
     );
   }
