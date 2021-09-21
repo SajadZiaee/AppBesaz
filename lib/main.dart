@@ -104,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
               textColor: Colors.black,
               appBarColor: Colors.blue,
               backgroundColor: Colors.white,
+              buttonColor: Colors.blue,
               imageName: "",
               myAppSetState: widget.myAppSetState,
             );

@@ -89,6 +89,7 @@ class ModuleState extends State<Module> {
               isBold: findSettingsModuleById(widget.id)!.isBold,
               textColor: findSettingsModuleById(widget.id)!.textColor,
               appBarColor: findSettingsModuleById(widget.id)!.appBarColor,
+              buttonColor: findSettingsModuleById(widget.id)!.buttonColor,
               backgroundColor:
                   findSettingsModuleById(widget.id)!.backgroundColor,
               imageName: findSettingsModuleById(widget.id)!.imageName);
