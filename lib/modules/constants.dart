@@ -30,3 +30,16 @@ List<MaterialColor> appbarColors = [
   Colors.purple,
   Colors.teal
 ];
+
+List<String> wallpapers = [
+  'assets/wallpapers/0.jpg',
+  'assets/wallpapers/1.jpg',
+  'assets/wallpapers/2.png',
+  'assets/wallpapers/3.jpg',
+  'assets/wallpapers/4.jpg',
+  'assets/wallpapers/5.jpg',
+  'assets/wallpapers/6.jpg',
+  'assets/wallpapers/7.jpg',
+  'assets/wallpapers/8.jpg',
+  'assets/wallpapers/9.jpg',
+];

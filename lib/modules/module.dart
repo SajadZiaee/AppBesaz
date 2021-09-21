@@ -40,7 +40,7 @@ class ModuleState extends State<Module> {
   Widget build(BuildContext context) {
     // TODO: implement build
     switch (widget.type) {
-      case 1: 
+      case 1:
         {
           CallModule cm = CallModule(
               id: widget.id,
@@ -82,18 +82,19 @@ class ModuleState extends State<Module> {
       case 4:
         {
           SettingsModule sm = SettingsModule(
-              id: widget.id,
-              index: widget.index,
-              font: findSettingsModuleById(widget.id)!.font,
-              fontSize: findSettingsModuleById(widget.id)!.fontSize,
-              isBold: findSettingsModuleById(widget.id)!.isBold,
-              textColor: findSettingsModuleById(widget.id)!.textColor,
-              appBarColor: findSettingsModuleById(widget.id)!.appBarColor,
-              buttonColor: findSettingsModuleById(widget.id)!.buttonColor,
-              backgroundColor:
-                  findSettingsModuleById(widget.id)!.backgroundColor,
-              imageName: findSettingsModuleById(widget.id)!.imageName);
-              return ElevatedButton(
+            id: widget.id,
+            index: widget.index,
+            // font: findSettingsModuleById(widget.id)!.font,
+            // fontSize: findSettingsModuleById(widget.id)!.fontSize,
+            // isBold: findSettingsModuleById(widget.id)!.isBold,
+            // textColor: findSettingsModuleById(widget.id)!.textColor,
+            // appBarColor: findSettingsModuleById(widget.id)!.appBarColor,
+            // buttonColor: findSettingsModuleById(widget.id)!.buttonColor,
+            // backgroundColor:
+            //     findSettingsModuleById(widget.id)!.backgroundColor,
+            // imageName: findSettingsModuleById(widget.id)!.imageName);
+          );
+          return ElevatedButton(
               onPressed: () {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => sm));

@@ -8,7 +8,8 @@ import 'package:appbesaz/modules/settingsModule.dart';
 
 import 'modules/constants.dart';
 
-void main() {
+void main() async {
+  await ApplicationSettings.getSettings();
   runApp(MyApp());
 }
 
@@ -23,21 +24,49 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        textTheme: TextTheme(button: TextStyle(fontWeight: FontWeight.normal)),
-        primarySwatch: Colors.blue,
-        appBarTheme: AppBarTheme(color: appbarColor),
-        fontFamily: fonts[applicationFont],
-      ),
-      home: MyHomePage(
-        title: 'Flutter Demo Home Page',
-        myAppSetState: () {
-          this.setState(() {});
-        },
-      ),
-    );
+    return Container(
+        decoration: (globalSettings['backgroundImage'] == "")
+            ? new BoxDecoration()
+            : new BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(globalSettings['backgroundImage']),
+                    fit: BoxFit.fill)),
+        // decoration: new BoxDecoration(
+        //     image:
+        //         DecorationImage(image: AssetImage('assets/wallpapers/1.jpg'))),
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            //scaffoldBackgroundColor: backgroundColor,
+            // if background image is set, then background color must be transparent.
+            scaffoldBackgroundColor: (globalSettings['backgroundImage'] == "")
+                ? globalSettings['backgroundColor']
+                : Colors.transparent,
+            textTheme: TextTheme(
+              button: TextStyle(
+                fontWeight: (globalSettings['isBold'] == false)
+                    ? FontWeight.normal
+                    : FontWeight.bold,
+                fontSize: globalSettings['fontSize'],
+              ),
+              bodyText2: TextStyle(
+                  fontWeight: (globalSettings['isBold'] == false)
+                      ? FontWeight.normal
+                      : FontWeight.bold,
+                  color: globalSettings['textColor'],
+                  fontSize: globalSettings['fontSize']),
+            ),
+            primarySwatch: globalSettings['buttonColor'],
+            appBarTheme: AppBarTheme(color: globalSettings['appbarColor']),
+            fontFamily: fonts[globalSettings['applicationFont']],
+          ),
+          home: MyHomePage(
+            title: 'Flutter Demo Home Page',
+            myAppSetState: () {
+              this.setState(() {});
+            },
+          ),
+        ));
   }
 }
 
@@ -63,7 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: appbarColor,
         title: Text(moduleList.length.toString()),
       ),
       body: ListView.builder(
@@ -92,21 +120,22 @@ class _MyHomePageState extends State<MyHomePage> {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print(appbarColor.toString());
-
           setState(() {
             SettingsModule a = new SettingsModule(
               id: 2,
               index: 2,
-              font: 0,
-              fontSize: 11,
-              isBold: true,
-              textColor: Colors.black,
-              appBarColor: Colors.blue,
-              backgroundColor: Colors.white,
-              buttonColor: Colors.blue,
-              imageName: "",
+              // font: applicationFont,
+              // fontSize: fontSize,
+              // isBold: isBold,
+              // textColor: textColor,
+              // appBarColor: appbarColor,
+              // backgroundColor: backgroundColor,
+              // buttonColor: buttonColor,
+              // imageName: backgroundImage,
               myAppSetState: widget.myAppSetState,
+
+              canChangeFont: true,
+              canChangeImageName: true,
             );
           });
         },
