@@ -1,3 +1,4 @@
+import 'package:appbesaz/modules/ContactUsModule/contactUs.dart';
 import 'package:appbesaz/modules/settingsModule.dart';
 import 'package:flutter/material.dart';
 import 'package:appbesaz/modules/ListModule/listModule.dart';
@@ -94,10 +95,25 @@ class ModuleState extends State<Module> {
             //     findSettingsModuleById(widget.id)!.backgroundColor,
             // imageName: findSettingsModuleById(widget.id)!.imageName);
           );
+
           return ElevatedButton(
               onPressed: () {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => sm));
+              },
+              child: Icon(Icons.list));
+        }
+      case 11:
+        {
+          ContactUsModule tmp = ContactUsModule(
+              id: widget.id,
+              index: widget.index,
+              attributes: findContactUsModuleById(widget.id)!.attributes,
+              maps: findContactUsModuleById(widget.id)!.maps);
+          return ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => tmp));
               },
               child: Icon(Icons.list));
         }

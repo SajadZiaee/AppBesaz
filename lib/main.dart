@@ -1,8 +1,11 @@
+import 'package:appbesaz/modules/ContactUsModule/contactMap.dart';
+import 'package:appbesaz/modules/ContactUsModule/contactUs.dart';
 import 'package:flutter/material.dart';
 import 'package:appbesaz/modules/ListModule/listModule.dart';
 import 'package:appbesaz/modules/ListModule/listTileModule.dart';
 import 'package:appbesaz/modules/module.dart';
 import 'package:appbesaz/modules/siteModule.dart';
+import 'package:latlng/latlng.dart';
 import 'modules/callModule.dart';
 import 'package:appbesaz/modules/settingsModule.dart';
 
@@ -120,26 +123,27 @@ class _MyHomePageState extends State<MyHomePage> {
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            SettingsModule a = new SettingsModule(
-              id: 2,
-              index: 2,
-              // font: applicationFont,
-              // fontSize: fontSize,
-              // isBold: isBold,
-              // textColor: textColor,
-              // appBarColor: appbarColor,
-              // backgroundColor: backgroundColor,
-              // buttonColor: buttonColor,
-              // imageName: backgroundImage,
-              myAppSetState: widget.myAppSetState,
-
-              canChangeFont: true,
-              canChangeImageName: true,
-            );
-          });
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      ContactUsModule(id: 2, index: 2, imageName: [
+                        wallpapers[5],
+                        wallpapers[7],
+                        wallpapers[2],
+                      ], attributes: {
+                        'آدرس': 'بیرجند',
+                        'شماره تماس': '۱۱۰',
+                        'درباره': 'ما یه شرکت چند ملیتی هستیم که ...',
+                        '۰۹۱۵۲۵۸۲۰۲۵۸': 'شماره رئیس شرکت',
+                        'علی': 'علی علی'
+                      }, maps: {
+                        'شعبه بیرجند': LatLng(32.872, 59.221),
+                        'شعبه یه جایی': LatLng(32.872, 60.2),
+                        'شعبه فلان جا': LatLng(31.872, 59.221),
+                      })));
         },
-        tooltip: 'add call module',
+        tooltip: 'add contact us module',
         child: Icon(Icons.add),
       ),
     );
