@@ -33,6 +33,9 @@ class ContactUsModule extends Module {
 class ContactUsModuleState extends State<ContactUsModule> {
   @override
   Widget build(BuildContext context) {
+    Widget appbar_ = AppBar(
+      title: Text('تماس با ما'),
+    );
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(

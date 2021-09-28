@@ -31,16 +31,19 @@ class ApplicationSettings {
   /// This class saves data via shared preferences in local device.
   /// This class can also be used to get the initial settings from fontEnd. [[[[Important]]]]
   static Future<void> getSettings() async {
-    
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    globalSettings['appbarColor'] = appbarColors[prefs.getInt("appbarColor") ?? 0];
+    globalSettings['appbarColor'] =
+        appbarColors[prefs.getInt("appbarColor") ?? 0];
     globalSettings['applicationFont'] = prefs.getInt("applicationFont") ?? 5;
-    globalSettings['buttonColor'] = appbarColors[prefs.getInt("buttonColor") ?? 0];
+    globalSettings['buttonColor'] =
+        appbarColors[prefs.getInt("buttonColor") ?? 0];
     globalSettings['isBold'] = prefs.getBool("isBold") ?? false;
-    globalSettings['backgroundColor'] = colors[prefs.getInt("backgroundColor") ?? 1];
+    globalSettings['backgroundColor'] =
+        colors[prefs.getInt("backgroundColor") ?? 1];
     globalSettings['textColor'] = colors[prefs.getInt("textColor") ?? 0];
-    globalSettings['fontSize'] = prefs.getDouble("fontSize") ?? 14;
-    globalSettings['backgroundImage'] = prefs.getString("backgroundImage") ?? "";
+    globalSettings['fontSize'] = prefs.getDouble("fontSize") ?? 14.0;
+    globalSettings['backgroundImage'] =
+        prefs.getString("backgroundImage") ?? "";
   }
 
   static void updateSettings(
@@ -299,7 +302,8 @@ class SettingsModuleState extends State<SettingsModule> {
                                   globalSettings['backgroundImage'] = '';
                                 } else {
                                   // widget.imageName = wallpapers[index];
-                                  globalSettings['backgroundImage'] = wallpapers[index];
+                                  globalSettings['backgroundImage'] =
+                                      wallpapers[index];
                                 }
                               });
                             },
@@ -346,7 +350,8 @@ class SettingsModuleState extends State<SettingsModule> {
                       ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              globalSettings['isBold'] = !globalSettings['isBold'];
+                              globalSettings['isBold'] =
+                                  !globalSettings['isBold'];
                             });
                           },
                           child: (globalSettings['isBold'])

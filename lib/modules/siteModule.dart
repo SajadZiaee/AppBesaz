@@ -11,8 +11,12 @@ SiteModule? findSiteModuleById(int id) {
 
 class SiteModule extends Module {
   String siteAddress;
-
-  SiteModule({required int id, required int index, required this.siteAddress})
+  int graphics; // each module will have several graphics types. default is 0.
+  SiteModule(
+      {required int id,
+      required int index,
+      required this.siteAddress,
+      this.graphics = 0})
       : super(id: id, index: index, type: 2) {
     siteModuleList.add(this);
   }
@@ -25,6 +29,9 @@ class SiteModule extends Module {
 class SiteModuleState extends State<SiteModule> {
   @override
   Widget build(BuildContext context) {
+    /// graphics = 0: with appbar
+    /// graphics = 1: 
+    
     return Scaffold(
         appBar: AppBar(
           title: Text('آدرس سایت'),

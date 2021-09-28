@@ -12,7 +12,10 @@ import 'package:appbesaz/modules/settingsModule.dart';
 import 'modules/constants.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  print('3 3 ta');
   await ApplicationSettings.getSettings();
+  print(globalSettings['appbarColor'].toString());
   runApp(MyApp());
 }
 
