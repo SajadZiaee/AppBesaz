@@ -5,8 +5,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'constants.dart';
 
-// insert a global map here, so that all application settings can be accessed from that map.
-
 Map<String, dynamic> globalSettings = {
   'appbarColor': Colors.blue,
   'applicationFont': 5,
@@ -29,7 +27,8 @@ Map<String, dynamic> globalSettings = {
 
 class ApplicationSettings {
   /// This class saves data via shared preferences in local device.
-  /// This class can also be used to get the initial settings from fontEnd. [[[[Important]]]]
+  /// This class can also be used to get the initial settings from fontEnd, via [getSettings] function.
+  /// if you want to update global settings from frontEnd, use [updateSettings].
   static Future<void> getSettings() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     globalSettings['appbarColor'] =
@@ -45,7 +44,7 @@ class ApplicationSettings {
     globalSettings['backgroundImage'] =
         prefs.getString("backgroundImage") ?? "";
   }
-
+  
   static void updateSettings(
       {required MaterialColor appbarColor_,
       required int applicationFont_,
@@ -114,6 +113,8 @@ class SettingsModule extends Module {
   SettingsModule({
     required int id,
     required int index,
+    String title = '',
+    String imageName = '',
     // required this.font,
     // required this.fontSize,
     // required this.isBold,
@@ -131,7 +132,8 @@ class SettingsModule extends Module {
     this.canChangeButtonColor = true,
     this.canChangeBackgroundColor = true,
     this.canChangeImageName = true,
-  }) : super(id: id, index: index, type: 4) {
+  }) : super(
+            id: id, index: index, type: 4, imageName: imageName, title: title) {
     settingsModuleList.add(this);
   }
   @override
@@ -145,6 +147,7 @@ class SettingsModuleState extends State<SettingsModule> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     return Scaffold(
       appBar: AppBar(
         title: Text('تنظیمات'),
@@ -364,7 +367,6 @@ class SettingsModuleState extends State<SettingsModule> {
                 : Container(),
             ElevatedButton(
               onPressed: () {
-                widget.myAppSetState!();
                 ApplicationSettings.updateSettings(
                     appbarColor_: globalSettings['appbarColor'],
                     applicationFont_: globalSettings['applicationFont'],
@@ -374,6 +376,8 @@ class SettingsModuleState extends State<SettingsModule> {
                     textColor_: globalSettings['textColor'],
                     fontSize_: globalSettings['fontSize'],
                     backgroundImage_: globalSettings['backgroundImage']);
+                widget.myAppSetState!();
+                setState(() {});
               },
               child: Text(
                 'ذخیره سازی تغییرات',

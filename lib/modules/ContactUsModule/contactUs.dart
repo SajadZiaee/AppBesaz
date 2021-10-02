@@ -13,16 +13,18 @@ ContactUsModule? findContactUsModuleById(int id) {
 }
 
 class ContactUsModule extends Module {
-  List<String> imageName;
+  List<String> imageNameList;
   Map<String, dynamic> attributes = {};
   Map<String, LatLng> maps = {};
   ContactUsModule({
     required int id,
     required int index,
-    this.imageName = const [],
+    this.imageNameList = const [],
     required this.attributes,
     required this.maps,
-  }) : super(id: id, index: index, type: 11);
+    String imageName = '',
+    String title = '',
+  }) : super(id: id, index: index, type: 11, imageName: imageName, title: title);
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -44,7 +46,7 @@ class ContactUsModuleState extends State<ContactUsModule> {
         body: SingleChildScrollView(
             child: Column(
           children: [
-            (widget.imageName.length != 0)
+            (widget.imageNameList.length != 0)
                 ? Container(
                     width: MediaQuery.of(context).size.width,
                     height: (MediaQuery.of(context).size.height / 5),
@@ -53,7 +55,7 @@ class ContactUsModuleState extends State<ContactUsModule> {
                     //         image: AssetImage(widget.imageName),
                     //         fit: BoxFit.fitWidth)),
                     child: SlideShow(
-                      imageNames: widget.imageName,
+                      imageNames: widget.imageNameList,
                       duration: 3,
                     ),
                   )

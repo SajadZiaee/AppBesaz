@@ -9,17 +9,50 @@ SiteModule? findSiteModuleById(int id) {
   }
 }
 
+/// every module's texts will be put in a map named [texts], and texts will change using [changeTexts] method.
+/// [graphics] shows the way widgets are placed on the screen.
+/// [widgetShapes] shows the different shapes of the widgets.
 class SiteModule extends Module {
   String siteAddress;
-  int graphics; // each module will have several graphics types. default is 0.
-  SiteModule(
-      {required int id,
-      required int index,
-      required this.siteAddress,
-      this.graphics = 0})
-      : super(id: id, index: index, type: 2) {
+  late int
+      graphics; // each module will have several graphics types. default is 0.
+  late Map<String, String> texts;
+  late Map<String, int> widgetShapes;
+  SiteModule({
+    required int id,
+    required int index,
+    required this.siteAddress,
+    String title = '',
+    String imageName = '',
+  }) : super(
+          id: id,
+          index: index,
+          type: 2,
+          imageName: imageName,
+          title: title,
+        ) {
     siteModuleList.add(this);
+    graphics = 0;
+    texts = {"متن ۱": "آدرس سایت", "متن دکمه": "برو"};
+    widgetShapes = {
+      "AppBar": 0,
+    };
   }
+  void changeTexts({required String txt1, required String btnTxt}) {
+    texts["متن ۱"] = txt1;
+    texts["متن دکمه"] = btnTxt;
+  }
+
+  void changeShapes({
+    required int appBar,
+  }) {
+    widgetShapes['AppBar'] = appBar;
+  }
+
+  void changeGraphics({required int graphics}) {
+    this.graphics = graphics;
+  }
+
   @override
   State<StatefulWidget> createState() {
     return SiteModuleState();
@@ -29,24 +62,93 @@ class SiteModule extends Module {
 class SiteModuleState extends State<SiteModule> {
   @override
   Widget build(BuildContext context) {
-    /// graphics = 0: with appbar
-    /// graphics = 1: 
-    
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('آدرس سایت'),
-        ),
-        body: Center(
-          child: Row(
-            children: [
-              Text('آدرس سایت' + widget.siteAddress),
-              ElevatedButton(
-                  onPressed: () {
-                    launch(widget.siteAddress);
-                  },
-                  child: Icon(Icons.web))
-            ],
+    List<AppBar> appBarList = [
+      AppBar(
+        title: Text(widget.title),
+        centerTitle: true,
+      ),
+      AppBar(
+        title: Text(widget.title),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
           ),
-        ));
+        ),
+      ),
+      AppBar(
+        title: Text(widget.title),
+        centerTitle: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(30),
+          ),
+        ),
+      ),
+      AppBar(
+        title: Text(widget.title),
+      ),
+      AppBar(
+        title: Text(widget.title),
+        shape: BeveledRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+      ),
+      AppBar(
+        title: Text(widget.title),
+        centerTitle: true,
+        shape: BeveledRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+      )
+    ];
+
+    widget.changeTexts(btnTxt: "علی علی", txt1: "علی یارت");
+    widget.changeShapes(appBar: 2);
+    widget.changeGraphics(graphics: 2);
+    switch (widget.graphics) {
+      case 0:
+        return Scaffold(
+            appBar: appBarList[widget.widgetShapes["AppBar"]!],
+            body: Center(
+              child: Row(
+                children: [
+                  Text(widget.texts["متن ۱"]! + widget.siteAddress),
+                  ElevatedButton(
+                      onPressed: () {
+                        launch(widget.siteAddress);
+                      },
+                      child: Text(widget.texts["متن دکمه"]!))
+                ],
+              ),
+            ));
+      case 1:
+        return Scaffold(
+            appBar: appBarList[widget.widgetShapes["AppBar"]!],
+            body: Center(
+              child: Column(
+                children: [
+                  Text(widget.texts["متن ۱"]! + widget.siteAddress),
+                  ElevatedButton(
+                      onPressed: () {
+                        launch(widget.siteAddress);
+                      },
+                      child: Text(widget.texts["متن دکمه"]!))
+                ],
+              ),
+            ));
+      default:
+        return Scaffold(
+            appBar: appBarList[widget.widgetShapes["AppBar"]!],
+            body: Center(
+              child: Column(
+                children: [
+                  Text(widget.texts["متن ۱"]! + widget.siteAddress),
+                  ElevatedButton(
+                      onPressed: () {
+                        launch(widget.siteAddress);
+                      },
+                      child: Text(widget.texts["متن دکمه"]!))
+                ],
+              ),
+            ));
+    }
   }
 }

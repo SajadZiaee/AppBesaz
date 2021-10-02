@@ -11,9 +11,17 @@ CallModule? findCallModuleById(int id) {
 
 class CallModule extends Module {
   final String phoneNumber;
-
-  CallModule({required int id, required int index, required this.phoneNumber})
-      : super(id: id, index: index, type: 1) {
+  late int graphics;
+  CallModule({
+    required int id,
+    required int index,
+    required this.phoneNumber,
+    this.graphics = 0,
+    String title = '',
+    String imageName = '',
+  }) : super(
+            id: id, index: index, type: 1, imageName: imageName, title: title) {
+    // graphics = 0;
     callModuleList.add(this);
   }
   @override
@@ -25,21 +33,47 @@ class CallModule extends Module {
 class CallModuleState extends State<CallModule> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('تماس'),
-        ),
-        body: Center(
-          child: Row(
-            children: [
-              Text('شماره تماس: ' + widget.phoneNumber),
-              ElevatedButton(
-                  onPressed: () {
-                    launch("tel://" + widget.phoneNumber);
-                  },
-                  child: Icon(Icons.call))
-            ],
-          ),
-        ));
+    Widget txt = Text('شماره تماس: ' + widget.phoneNumber);
+    Widget btn = ElevatedButton(
+        onPressed: () {
+          launch("tel://" + widget.phoneNumber);
+        },
+        child: Icon(Icons.call));
+    Widget btn2 = ElevatedButton(
+        onPressed: () {
+          launch("tel://" + widget.phoneNumber);
+        },
+        child: Text('تماس'));
+    switch (widget.graphics) {
+      case 0:
+        return Scaffold(
+            appBar: AppBar(
+              title: Text('تماس'),
+            ),
+            body: Center(
+              child: Row(
+                children: [
+                  txt,
+                  btn,
+                ],
+              ),
+            ));
+      case 1:
+        return Scaffold(
+            appBar: AppBar(
+              title: Text('تماس'),
+            ),
+            body: Center(
+              child: Column(
+                children: [
+                  txt,
+                  btn,
+                ],
+              ),
+            ));
+
+      default:
+        return Container();
+    }
   }
 }
