@@ -4,6 +4,7 @@ import 'package:appbesaz/modules/UserAccountModule/%20entities.dart';
 import 'package:appbesaz/modules/UserAccountModule/registerPage.dart';
 import 'package:appbesaz/modules/UserAccountModule/userAccountModule.dart';
 import 'package:appbesaz/modules/zarinpalModule.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:appbesaz/modules/ListModule/listModule.dart';
 import 'package:appbesaz/modules/ListModule/listTileModule.dart';
@@ -42,7 +43,11 @@ class MyAppState extends State<MyApp> {
         // decoration: new BoxDecoration(
         //     image:
         //         DecorationImage(image: AssetImage('assets/wallpapers/1.jpg'))),
+
         child: MaterialApp(
+          /// should use [initialRoute] here.
+
+          debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData(
             //scaffoldBackgroundColor: backgroundColor,
@@ -65,9 +70,13 @@ class MyAppState extends State<MyApp> {
                   fontSize: globalSettings['fontSize']),
             ),
             primarySwatch: globalSettings['buttonColor'],
-            appBarTheme: AppBarTheme(color: globalSettings['appbarColor']),
+            appBarTheme: AppBarTheme(
+                color: globalSettings['appbarColor'],
+                shape: appBarShapeList[globalSettings['appBarShape']],
+                centerTitle: globalSettings['appBarCenterTitle']),
             fontFamily: fonts[globalSettings['applicationFont']],
           ),
+
           home: MyHomePage(
             title: 'Flutter Demo Home Page',
             myAppSetState: () {
@@ -103,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
     id: 1,
     index: 1,
     phoneNumber: '112',
-    graphics: 1,
+    graphics: 2,
   );
 
   ContactUsModule tmp = ContactUsModule(
@@ -130,66 +139,85 @@ class _MyHomePageState extends State<MyHomePage> {
     title: 'تماس بگیر با ما',
   );
   UserAccountModule uam = new UserAccountModule(id: 3, index: 3);
+
   @override
   Widget build(BuildContext context) {
+    for (int a = 0; a < moduleList.length; a++)
+      if (findModuleByIndex(a) != null) print('yse');
+
+    for (int a = 0; a < moduleList.length; a++) {
+      if (moduleList[a].visibility == true) print('IT IS');
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(moduleList.length.toString()),
       ),
-      body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, childAspectRatio: 1.25),
-        itemCount: moduleList.length,
-        itemBuilder: (BuildContext context, int index) {
-          ScrollController _controller;
-          String s = (findModuleByIndex(index)!.type == 1)
-              ? 'CallModule'
-              : (findModuleByIndex(index)!.type == 2)
-                  ? 'SiteModule'
-                  : (findModuleByIndex(index)!.type == 3)
-                      ? 'ListModule'
-                      : 'SettingsModule';
-          return ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => findModuleByIndex(index)!));
-            },
-            child: Container(
-              child: Column(
-                children: [
-                  (findModuleByIndex(index)!.imageName != '')
-                      ? Container(
-                          height: 100,
-                          width: 100,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage(
-                                      findModuleByIndex(index)!.imageName))),
-                        )
-                      : Container(),
-                  (findModuleByIndex(index)!.title == '')
-                      ? Text(s)
-                      : Text(findModuleByIndex(index)!.title),
-                ],
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-                shape: BeveledRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(27)))),
-          );
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          List<Module> ls = [];
+          for (Module m in moduleList) {
+            if (m.visibility == true) ls.add(m);
+          }
 
-          // Container(
-          //     height: 100,
-          //     width: 100,
-          //     child: ElevatedButton(
-          //       child: Text(index.toString() + s),
-          //       onPressed: () {
-          //         Navigator.push(
-          //             context,
-          //             MaterialPageRoute(
-          //                 builder: (context) => findModuleByIndex(index)!));
+          return GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: (orientation == Orientation.portrait) ? 2 : 4,
+                childAspectRatio: 1.25),
+            itemCount: ls.length,
+            itemBuilder: (BuildContext context, int index) {
+              ScrollController _controller;
+              String string = '';
+
+              string = (ls[index].type == 1)
+                  ? 'CallModule'
+                  : (ls[index].type == 2)
+                      ? 'SiteModule'
+                      : (ls[index].type == 3)
+                          ? 'ListModule'
+                          : 'SettingsModule';
+              return ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ls[index]));
+                },
+                child: Container(
+                  child: Column(
+                    children: [
+                      (ls[index].imageName != '')
+                          ? Container(
+                              height: 100,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(ls[index].imageName))),
+                            )
+                          : Container(
+                              height: 100,
+                              width: 100,
+                            ),
+                      (ls[index].title == '')
+                          ? Text(string)
+                          : Text(ls[index].title),
+                    ],
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                    shape: BeveledRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(27)))),
+              );
+
+              // Container(
+              //     height: 100,
+              //     width: 100,
+              //     child: ElevatedButton(
+              //       child: Text(index.toString() + s),
+              //       onPressed: () {
+              //         Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => findModuleByIndex(index)!));
+            },
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -207,6 +235,8 @@ class _MyHomePageState extends State<MyHomePage> {
               index: moduleList.length,
               myAppSetState: widget.myAppSetState,
             );
+
+            // findModuleById(1)!.setVisibility(!findModuleById(1)!.visibility);
           });
         },
         tooltip: 'add contact us module',

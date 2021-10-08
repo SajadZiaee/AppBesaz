@@ -7,6 +7,8 @@ import 'constants.dart';
 
 Map<String, dynamic> globalSettings = {
   'appbarColor': Colors.blue,
+  'appBarShape': 0,
+  'appBarCenterTitle': false,
   'applicationFont': 5,
   'buttonColor': Colors.blue,
   'isBold': false,
@@ -43,8 +45,11 @@ class ApplicationSettings {
     globalSettings['fontSize'] = prefs.getDouble("fontSize") ?? 14.0;
     globalSettings['backgroundImage'] =
         prefs.getString("backgroundImage") ?? "";
+    globalSettings['appBarShape'] = prefs.getInt('appBarShape') ?? 0;
+    globalSettings['appBarCenterTitle'] =
+        prefs.getBool('appBarCenterTitle') ?? false;
   }
-  
+
   static void updateSettings(
       {required MaterialColor appbarColor_,
       required int applicationFont_,
@@ -53,7 +58,9 @@ class ApplicationSettings {
       required Color backgroundColor_,
       required Color textColor_,
       required double fontSize_,
-      required String backgroundImage_}) async {
+      required String backgroundImage_,
+      required int appBarShape_,
+      required bool appBarCenterTitle_}) async {
     globalSettings['appbarColor'] = appbarColor_;
     globalSettings['applicationFont'] = applicationFont_;
     globalSettings['buttonColor'] = buttonColor_;
@@ -62,6 +69,8 @@ class ApplicationSettings {
     globalSettings['textColor'] = textColor_;
     globalSettings['fontSize'] = fontSize_;
     globalSettings['backgroundImage'] = backgroundImage_;
+    globalSettings['appBarShape'] = appBarShape_;
+    globalSettings['appBarCenterTitle'] = appBarCenterTitle_;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt("appbarColor", appbarColors.indexOf(appbarColor_));
@@ -72,6 +81,8 @@ class ApplicationSettings {
     prefs.setInt("textColor", colors.indexOf(textColor_));
     prefs.setDouble("fontSize", fontSize_);
     prefs.setString("backgroundImage", backgroundImage_);
+    prefs.setInt("appBarShape", appBarShape_);
+    prefs.setBool("appBarCenterTitle", appBarCenterTitle_);
   }
 }
 
@@ -109,7 +120,9 @@ class SettingsModule extends Module {
   bool canChangeButtonColor;
   bool canChangeBackgroundColor;
   bool canChangeImageName;
-
+  bool canChangeAppBarShape;
+  bool canChangeappBarCenterTitle;
+  late int graphics;
   SettingsModule({
     required int id,
     required int index,
@@ -132,9 +145,12 @@ class SettingsModule extends Module {
     this.canChangeButtonColor = true,
     this.canChangeBackgroundColor = true,
     this.canChangeImageName = true,
+    this.canChangeAppBarShape = true,
+    this.canChangeappBarCenterTitle = true,
   }) : super(
             id: id, index: index, type: 4, imageName: imageName, title: title) {
     settingsModuleList.add(this);
+    graphics = 0;
   }
   @override
   State<StatefulWidget> createState() {
@@ -147,227 +163,293 @@ class SettingsModuleState extends State<SettingsModule> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    AppBar appBar = AppBar(
+      title: Text(widget.title),
+    );
+    List<Widget> changeFont = [];
+    (widget.canChangeFont)
+        ? changeFont.add(Text(
+            'فونت نوشته های اپلیکیشن: ',
+            style: TextStyle(fontFamily: 'Shabnam'),
+          ))
+        : Container();
+    (widget.canChangeFont)
+        ? changeFont.add(Icon(Icons.font_download))
+        : Container();
+    (widget.canChangeFont)
+        ? changeFont.add(Icon(Icons.font_download_rounded))
+        : Container();
+    (widget.canChangeFont)
+        ? changeFont.add(Icon(Icons.font_download_outlined))
+        : Container();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('تنظیمات'),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            (widget.canChangeFont)
-                ? Text(
-                    'فونت نوشته های اپلیکیشن: ',
-                    style: TextStyle(fontFamily: 'Shabnam'),
-                  )
-                : Container(),
-            (widget.canChangeFont)
-                ? Container(
-                    height: 50,
-                    width: 300,
-                    child: ListView.builder(
-                        physics: const AlwaysScrollableScrollPhysics(),
+    return OrientationBuilder(builder: (context, orientation) {
+      return Scaffold(
+        appBar: (orientation == Orientation.portrait)
+            ? AppBar(
+                title: Text(widget.title),
+              )
+            : null,
+        body: Center(
+            child: ListView(shrinkWrap: true, children: [
+          Column(
+            children: [
+              (widget.canChangeFont)
+                  ? Text(
+                      'فونت نوشته های اپلیکیشن: ',
+                      style: TextStyle(fontFamily: 'Shabnam'),
+                    )
+                  : Container(),
+              (widget.canChangeFont)
+                  ? Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width - 20,
+                      child: ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: fonts.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ElevatedButton(
+                              child: Text(
+                                fonts[index],
+                                style: TextStyle(fontFamily: fonts[index]),
+                              ),
+                              onPressed: () {
+                                // font must be selected for whole application.
+                                globalSettings['applicationFont'] = index;
+                              },
+                            );
+                          }),
+                    )
+                  : Container(),
+              (widget.canChangeAppBarColor)
+                  ? Text('رنگ نوار بالای صفحه: ',
+                      style: TextStyle(fontFamily: 'Shabnam'))
+                  : Container(),
+              (widget.canChangeAppBarColor)
+                  ? Container(
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 30,
+                      child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: fonts.length,
+                        itemCount: appbarColors.length,
                         itemBuilder: (BuildContext context, int index) {
                           return ElevatedButton(
-                            child: Text(
-                              fonts[index],
-                              style: TextStyle(fontFamily: fonts[index]),
-                            ),
                             onPressed: () {
-                              // font must be selected for whole application.
-                              globalSettings['applicationFont'] = index;
+                              // widget.appBarColor = appbarColors[index];
+                              globalSettings['appbarColor'] =
+                                  appbarColors[index];
                             },
+                            child: Text(''),
+                            style: ElevatedButton.styleFrom(
+                                primary: appbarColors[index]),
                           );
-                        }),
-                  )
-                : Container(),
-            (widget.canChangeAppBarColor)
-                ? Text('رنگ نوار بالای صفحه: ',
-                    style: TextStyle(fontFamily: 'Shabnam'))
-                : Container(),
-            (widget.canChangeAppBarColor)
-                ? Container(
-                    width: 300,
-                    height: 30,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: appbarColors.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ElevatedButton(
-                          onPressed: () {
-                            // widget.appBarColor = appbarColors[index];
-                            globalSettings['appbarColor'] = appbarColors[index];
-                          },
-                          child: Text(''),
-                          style: ElevatedButton.styleFrom(
-                              primary: appbarColors[index]),
-                        );
+                        },
+                      ),
+                    )
+                  : Container(),
+              (widget.canChangeAppBarShape)
+                  ? Text('شکل نوار بالای صفحه: ',
+                      style: TextStyle(fontFamily: 'Shabnam'))
+                  : Container(),
+              (widget.canChangeAppBarShape)
+                  ? Container(
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 30,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: appBarShapeList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ElevatedButton(
+                            onPressed: () {
+                              // widget.buttonColor = appbarColors[index];
+                              globalSettings['appBarShape'] = index;
+                            },
+                            child: Text(''),
+                            style: ElevatedButton.styleFrom(
+                                shape: appBarShapeListBtn[index]),
+                          );
+                        },
+                      ),
+                    )
+                  : Container(),
+              (widget.canChangeappBarCenterTitle)
+                  ? Text('محل متن نوار بالای صفحه: ',
+                      style: TextStyle(fontFamily: 'Shabnam'))
+                  : Container(),
+              (widget.canChangeappBarCenterTitle)
+                  ? ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          globalSettings['appBarCenterTitle'] =
+                              !globalSettings['appBarCenterTitle'];
+                        });
                       },
-                    ),
-                  )
-                : Container(),
-            (widget.canChangeButtonColor)
-                ? Text('رنگ دکمه های صفحه: ',
-                    style: TextStyle(fontFamily: 'Shabnam'))
-                : Container(),
-            (widget.canChangeButtonColor)
-                ? Container(
-                    width: 300,
-                    height: 30,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: appbarColors.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ElevatedButton(
-                          onPressed: () {
-                            // widget.buttonColor = appbarColors[index];
-                            globalSettings['buttonColor'] = appbarColors[index];
-                          },
-                          child: Text(''),
-                          style: ElevatedButton.styleFrom(
-                              primary: appbarColors[index]),
-                        );
+                      child: (globalSettings['appBarCenterTitle'])
+                          ? Text('وسط')
+                          : Text('سمت چپ'))
+                  : Container(),
+              (widget.canChangeButtonColor)
+                  ? Text('رنگ دکمه های صفحه: ',
+                      style: TextStyle(fontFamily: 'Shabnam'))
+                  : Container(),
+              (widget.canChangeButtonColor)
+                  ? Container(
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 30,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: appbarColors.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ElevatedButton(
+                            onPressed: () {
+                              // widget.buttonColor = appbarColors[index];
+                              globalSettings['buttonColor'] =
+                                  appbarColors[index];
+                            },
+                            child: Text(''),
+                            style: ElevatedButton.styleFrom(
+                                primary: appbarColors[index]),
+                          );
+                        },
+                      ),
+                    )
+                  : Container(),
+              (widget.canChangeBackgroundColor)
+                  ? Text('رنگ پس زمینه صفحه: ',
+                      style: TextStyle(fontFamily: 'Shabnam'))
+                  : Container(),
+              (widget.canChangeBackgroundColor)
+                  ? Container(
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 30,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: colors.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ElevatedButton(
+                            onPressed: () {
+                              // widget.backgroundColor = colors[index];
+                              globalSettings['backgroundColor'] = colors[index];
+                            },
+                            child: Text(''),
+                            style: ElevatedButton.styleFrom(
+                                primary: colors[index]),
+                          );
+                        },
+                      ),
+                    )
+                  : Container(),
+              (widget.canChangeTextColor)
+                  ? Text('رنگ نوشته ها: ',
+                      style: TextStyle(fontFamily: 'Shabnam'))
+                  : Container(),
+              (widget.canChangeTextColor)
+                  ? Container(
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 30,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: colors.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ElevatedButton(
+                            onPressed: () {
+                              // widget.textColor = colors[index];
+                              globalSettings['textColor'] = colors[index];
+                            },
+                            child: Text(''),
+                            style: ElevatedButton.styleFrom(
+                                primary: colors[index]),
+                          );
+                        },
+                      ),
+                    )
+                  : Container(),
+              (widget.canChangeImageName)
+                  ? Text(
+                      'انتخاب والپیپر: ',
+                      style: TextStyle(fontFamily: 'Shabnam'),
+                    )
+                  : Container(),
+              (widget.canChangeImageName)
+                  ? Container(
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 100,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: wallpapers.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (index == 0) {
+                                    // widget.imageName = '';
+                                    globalSettings['backgroundImage'] = '';
+                                  } else {
+                                    // widget.imageName = wallpapers[index];
+                                    globalSettings['backgroundImage'] =
+                                        wallpapers[index];
+                                  }
+                                });
+                              },
+                              child: Container(
+                                height: 100,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.black54, width: 4.0),
+                                    image: DecorationImage(
+                                        image: AssetImage(wallpapers[index]))),
+                              ));
+                        },
+                      ),
+                    )
+                  : Container(),
+              (widget.canChangeFontSize)
+                  ? Text('سایز نوشته ها: ',
+                      style: TextStyle(fontFamily: 'Shabnam'))
+                  : Container(),
+              (widget.canChangeFontSize)
+                  ? Slider(
+                      value: globalSettings['fontSize'],
+                      min: 8,
+                      max: 32,
+                      divisions: 10,
+                      onChanged: (double value) {
+                        setState(() {
+                          // widget.fontSize = value;
+                          globalSettings['fontSize'] = value;
+                        });
                       },
-                    ),
-                  )
-                : Container(),
-            (widget.canChangeBackgroundColor)
-                ? Text('رنگ پس زمینه صفحه: ',
-                    style: TextStyle(fontFamily: 'Shabnam'))
-                : Container(),
-            (widget.canChangeBackgroundColor)
-                ? Container(
-                    width: 300,
-                    height: 30,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: colors.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ElevatedButton(
-                          onPressed: () {
-                            // widget.backgroundColor = colors[index];
-                            globalSettings['backgroundColor'] = colors[index];
-                          },
-                          child: Text(''),
-                          style:
-                              ElevatedButton.styleFrom(primary: colors[index]),
-                        );
-                      },
-                    ),
-                  )
-                : Container(),
-            (widget.canChangeTextColor)
-                ? Text('رنگ نوشته ها: ',
-                    style: TextStyle(fontFamily: 'Shabnam'))
-                : Container(),
-            (widget.canChangeTextColor)
-                ? Container(
-                    width: 300,
-                    height: 30,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: colors.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ElevatedButton(
-                          onPressed: () {
-                            // widget.textColor = colors[index];
-                            globalSettings['textColor'] = colors[index];
-                          },
-                          child: Text(''),
-                          style:
-                              ElevatedButton.styleFrom(primary: colors[index]),
-                        );
-                      },
-                    ),
-                  )
-                : Container(),
-            (widget.canChangeImageName)
-                ? Text(
-                    'انتخاب والپیپر: ',
-                    style: TextStyle(fontFamily: 'Shabnam'),
-                  )
-                : Container(),
-            (widget.canChangeImageName)
-                ? Container(
-                    width: 300,
-                    height: 100,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: wallpapers.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                            onTap: () {
+                    )
+                  : Container(),
+              (widget.canChangeIsBold)
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      textDirection: TextDirection.rtl,
+                      children: [
+                        Text(
+                          'بولد بودن یا نبودن نوشته ها',
+                          style: TextStyle(fontFamily: 'Shabnam'),
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
                               setState(() {
-                                if (index == 0) {
-                                  // widget.imageName = '';
-                                  globalSettings['backgroundImage'] = '';
-                                } else {
-                                  // widget.imageName = wallpapers[index];
-                                  globalSettings['backgroundImage'] =
-                                      wallpapers[index];
-                                }
+                                globalSettings['isBold'] =
+                                    !globalSettings['isBold'];
                               });
                             },
-                            child: Container(
-                              height: 100,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.black54, width: 4.0),
-                                  image: DecorationImage(
-                                      image: AssetImage(wallpapers[index]))),
-                            ));
-                      },
-                    ),
-                  )
-                : Container(),
-            (widget.canChangeFontSize)
-                ? Text('سایز نوشته ها: ',
-                    style: TextStyle(fontFamily: 'Shabnam'))
-                : Container(),
-            (widget.canChangeFontSize)
-                ? Slider(
-                    value: globalSettings['fontSize'],
-                    min: 8,
-                    max: 32,
-                    divisions: 10,
-                    onChanged: (double value) {
-                      setState(() {
-                        // widget.fontSize = value;
-                        globalSettings['fontSize'] = value;
-                      });
-                    },
-                  )
-                : Container(),
-            (widget.canChangeIsBold)
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    textDirection: TextDirection.rtl,
-                    children: [
-                      Text(
-                        'بولد بودن یا نبودن نوشته ها',
-                        style: TextStyle(fontFamily: 'Shabnam'),
-                      ),
-                      ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              globalSettings['isBold'] =
-                                  !globalSettings['isBold'];
-                            });
-                          },
-                          child: (globalSettings['isBold'])
-                              ? Text('معمولی',
-                                  style: TextStyle(fontFamily: 'Shabnam'))
-                              : Text('بولد',
-                                  style: TextStyle(fontFamily: 'Shabnam'))),
-                    ],
-                  )
-                : Container(),
-            ElevatedButton(
-              onPressed: () {
-                ApplicationSettings.updateSettings(
+                            child: (globalSettings['isBold'])
+                                ? Text('معمولی',
+                                    style: TextStyle(fontFamily: 'Shabnam'))
+                                : Text('بولد',
+                                    style: TextStyle(fontFamily: 'Shabnam'))),
+                      ],
+                    )
+                  : Container(),
+              ElevatedButton(
+                onPressed: () {
+                  ApplicationSettings.updateSettings(
                     appbarColor_: globalSettings['appbarColor'],
                     applicationFont_: globalSettings['applicationFont'],
                     buttonColor_: globalSettings['buttonColor'],
@@ -375,18 +457,22 @@ class SettingsModuleState extends State<SettingsModule> {
                     backgroundColor_: globalSettings['backgroundColor'],
                     textColor_: globalSettings['textColor'],
                     fontSize_: globalSettings['fontSize'],
-                    backgroundImage_: globalSettings['backgroundImage']);
-                widget.myAppSetState!();
-                setState(() {});
-              },
-              child: Text(
-                'ذخیره سازی تغییرات',
-                style: TextStyle(fontFamily: 'Shabnam'),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+                    backgroundImage_: globalSettings['backgroundImage'],
+                    appBarShape_: globalSettings['appBarShape'],
+                    appBarCenterTitle_: globalSettings['appBarCenterTitle'],
+                  );
+                  widget.myAppSetState!();
+                  setState(() {});
+                },
+                child: Text(
+                  'ذخیره سازی تغییرات',
+                  style: TextStyle(fontFamily: 'Shabnam'),
+                ),
+              )
+            ],
+          ),
+        ])),
+      );
+    });
   }
 }

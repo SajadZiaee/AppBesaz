@@ -10,7 +10,14 @@ import 'UserAccountModule/ entities.dart';
 List<Module> moduleList = [];
 Module? findModuleByIndex(int index) {
   for (Module a in moduleList) {
-    if (a.index == index) return a;
+    if (a.index == index && a.visibility == true) return a;
+  }
+  return null;
+}
+
+Module? findModuleById(int id) {
+  for (Module a in moduleList) {
+    if (a.id == id) return a;
   }
 }
 
@@ -27,22 +34,30 @@ void goUp(int index) {
 /// [title] is the text shown on the [ElevatedButton] connected to this module.
 /// [imageName] is the name of the image connected to this module (located in assets).
 /// [imageName] will be shown on the [ElevatedButton] connected to this module.
+/// [visibility] = false, indicates that this module is invisible and will not be shown in the app.
+/// [findModuleByIndex] also checks if this module is visible and returns the module only if it's [visibility] = true.
 class Module extends StatefulWidget {
   int id;
   int index;
   int type; // 1 for call module, 2 for site module, 3 for list module, 4 for settings module ..... to be continued.
   String title;
   String imageName;
+  bool visibility;
   Module({
     required this.id,
     required this.index,
     required this.type,
     this.title = '',
     this.imageName = '',
+    this.visibility = true,
   }) {
     moduleList.add(this);
     Role.giveAccessToAllRoles(); // gives this module's access to all Roles.
   }
+  void setVisibility(bool newVisibility) {
+    visibility = newVisibility;
+  }
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -110,30 +125,30 @@ class ModuleState extends State<Module> {
       //       // imageName: findSettingsModuleById(widget.id)!.imageName);
       //     );
 
-        //   return ElevatedButton(
-        //       onPressed: () {
-        //         Navigator.push(
-        //             context, MaterialPageRoute(builder: (context) => sm));
-        //       },
-        //       child: Container(
-        //         child: Column(
-        //           children: [
-        //             Container(
-        //               height: 100,
-        //               width: 100,
-        //               decoration: (widget.imageName != '')
-        //                   ? BoxDecoration(
-        //                       image: DecorationImage(
-        //                           image: AssetImage(widget.imageName)))
-        //                   : null,
-        //             ),
-        //             (widget.title == '')
-        //                 ? Text('Settings')
-        //                 : Text(widget.title),
-        //           ],
-        //         ),
-        //       ));
-        // }
+      //   return ElevatedButton(
+      //       onPressed: () {
+      //         Navigator.push(
+      //             context, MaterialPageRoute(builder: (context) => sm));
+      //       },
+      //       child: Container(
+      //         child: Column(
+      //           children: [
+      //             Container(
+      //               height: 100,
+      //               width: 100,
+      //               decoration: (widget.imageName != '')
+      //                   ? BoxDecoration(
+      //                       image: DecorationImage(
+      //                           image: AssetImage(widget.imageName)))
+      //                   : null,
+      //             ),
+      //             (widget.title == '')
+      //                 ? Text('Settings')
+      //                 : Text(widget.title),
+      //           ],
+      //         ),
+      //       ));
+      // }
       // case 11:
       //   {
       //     ContactUsModule tmp = ContactUsModule(

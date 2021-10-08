@@ -62,43 +62,7 @@ class SiteModule extends Module {
 class SiteModuleState extends State<SiteModule> {
   @override
   Widget build(BuildContext context) {
-    List<AppBar> appBarList = [
-      AppBar(
-        title: Text(widget.title),
-        centerTitle: true,
-      ),
-      AppBar(
-        title: Text(widget.title),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(30),
-          ),
-        ),
-      ),
-      AppBar(
-        title: Text(widget.title),
-        centerTitle: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(30),
-          ),
-        ),
-      ),
-      AppBar(
-        title: Text(widget.title),
-      ),
-      AppBar(
-        title: Text(widget.title),
-        shape: BeveledRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20))),
-      ),
-      AppBar(
-        title: Text(widget.title),
-        centerTitle: true,
-        shape: BeveledRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20))),
-      )
-    ];
+    
 
     widget.changeTexts(btnTxt: "علی علی", txt1: "علی یارت");
     widget.changeShapes(appBar: 2);
@@ -106,7 +70,7 @@ class SiteModuleState extends State<SiteModule> {
     switch (widget.graphics) {
       case 0:
         return Scaffold(
-            appBar: appBarList[widget.widgetShapes["AppBar"]!],
+            appBar: AppBar(title: Text(widget.title),),
             body: Center(
               child: Row(
                 children: [
@@ -121,7 +85,7 @@ class SiteModuleState extends State<SiteModule> {
             ));
       case 1:
         return Scaffold(
-            appBar: appBarList[widget.widgetShapes["AppBar"]!],
+            appBar: AppBar(title: Text(widget.title),),
             body: Center(
               child: Column(
                 children: [
@@ -136,7 +100,7 @@ class SiteModuleState extends State<SiteModule> {
             ));
       default:
         return Scaffold(
-            appBar: appBarList[widget.widgetShapes["AppBar"]!],
+            appBar: AppBar(title: Text(widget.title),),
             body: Center(
               child: Column(
                 children: [

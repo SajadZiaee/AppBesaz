@@ -43,3 +43,43 @@ List<String> wallpapers = [
   'assets/wallpapers/8.jpg',
   'assets/wallpapers/9.jpg',
 ];
+
+/// 0 for circular, 1 for less circular, 2 for rectangular, 3 for hexagonal.
+List<ShapeBorder> appBarShapeList = [
+  RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(
+      bottom: Radius.circular(30),
+    ),
+  ),
+  RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(
+      bottom: Radius.circular(15),
+    ),
+  ),
+  RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(
+      bottom: Radius.circular(0),
+    ),
+  ),
+  BeveledRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+];
+
+List<OutlinedBorder> appBarShapeListBtn = [
+
+  RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(
+      bottom: Radius.circular(30),
+    ),
+  ),
+  RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(
+      bottom: Radius.circular(15),
+    ),
+  ),
+  RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(
+      bottom: Radius.circular(0),
+    ),
+  ),
+  BeveledRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+];

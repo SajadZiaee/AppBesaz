@@ -10,10 +10,10 @@ ListModule? findListModuleById(int id) {
 }
 
 class ListModule extends Module {
-  String title;
+  
   // each list module has an id and it's list tiles share that id.
-  ListModule({required int id, required int index, required this.title})
-      : super(id: id, index: index, type: 3) {
+  ListModule({required int id, required int index,  String title = '', String imageName = ''})
+      : super(id: id, index: index, type: 3, title: title) {
     listModuleList.add(this);
   }
   @override
