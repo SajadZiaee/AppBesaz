@@ -3,6 +3,8 @@ import 'package:appbesaz/modules/ContactUsModule/contactUs.dart';
 import 'package:appbesaz/modules/UserAccountModule/%20entities.dart';
 import 'package:appbesaz/modules/UserAccountModule/registerPage.dart';
 import 'package:appbesaz/modules/UserAccountModule/userAccountModule.dart';
+import 'package:appbesaz/modules/contentModule.dart';
+import 'package:appbesaz/modules/emailModule.dart';
 import 'package:appbesaz/modules/zarinpalModule.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -108,13 +110,13 @@ class _MyHomePageState extends State<MyHomePage> {
     imageName: wallpapers[3],
     title: 'برو به گوگل دات کام!',
   );
+
   CallModule c = new CallModule(
     id: 1,
     index: 1,
     phoneNumber: '112',
     graphics: 2,
   );
-
   ContactUsModule tmp = ContactUsModule(
     id: 2,
     index: 2,
@@ -139,15 +141,33 @@ class _MyHomePageState extends State<MyHomePage> {
     title: 'تماس بگیر با ما',
   );
   UserAccountModule uam = new UserAccountModule(id: 3, index: 3);
+  EmailModule em = new EmailModule(
+      id: moduleList.length,
+      index: moduleList.length,
+      imageName: '',
+      title: 'ایمیل بزن',
+      emailAddress: 'dayan.acorn@gmail.com',
+      emailSubject: 'emailSubject');
 
   @override
   Widget build(BuildContext context) {
-    SettingsModule sm = new SettingsModule(
-      id: moduleList.length,
-      index: moduleList.length,
-      myAppSetState: widget.myAppSetState,
-      graphics: 1,
-    );
+    
+    ContentModule cmm = new ContentModule(
+
+        id: moduleList.length,
+        index: moduleList.length,
+        contentModuleList: [uam, em, c],
+        mainSetState: (){setState(() {
+          
+        });},
+        );
+   
+    // SettingsModule sm = new SettingsModule(
+    //   id: moduleList.length,
+    //   index: moduleList.length,
+    //   myAppSetState: widget.myAppSetState,
+    //   graphics: 0,
+    // );
     for (int a = 0; a < moduleList.length; a++)
       if (findModuleByIndex(a) != null) print('yse');
 
@@ -229,6 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
+             cmm.addModule(s);
             // print(premiumPlanMonthly.description);
             // print(premiumPlanYearly.description);
             // Navigator.push(
