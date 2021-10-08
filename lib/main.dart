@@ -142,6 +142,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SettingsModule sm = new SettingsModule(
+      id: moduleList.length,
+      index: moduleList.length,
+      myAppSetState: widget.myAppSetState,
+      graphics: 1,
+    );
     for (int a = 0; a < moduleList.length; a++)
       if (findModuleByIndex(a) != null) print('yse');
 
@@ -229,12 +235,6 @@ class _MyHomePageState extends State<MyHomePage> {
             //     context,
             //     MaterialPageRoute(
             //         builder: (context) => ZarinPalTest(planId: 1)));
-
-            SettingsModule sm = new SettingsModule(
-              id: moduleList.length,
-              index: moduleList.length,
-              myAppSetState: widget.myAppSetState,
-            );
 
             // findModuleById(1)!.setVisibility(!findModuleById(1)!.visibility);
           });
