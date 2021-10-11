@@ -34,6 +34,10 @@ dependencies:
   latlng: ^0.1.0
   map: ^1.0.0
   zarinpal: ^1.0.4+1
+  webfeed: ^0.7.0
+  http: ^0.13.4
+  just_audio: ^0.9.12
+  
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +55,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/wallpapers/
+    - assets/songs/
   fonts:
     - family: IranNastaliq
       fonts:

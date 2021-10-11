@@ -1,10 +1,12 @@
 import 'package:appbesaz/modules/ContactUsModule/contactMap.dart';
 import 'package:appbesaz/modules/ContactUsModule/contactUs.dart';
+import 'package:appbesaz/modules/rssReaderModule.dart';
 import 'package:appbesaz/modules/UserAccountModule/%20entities.dart';
 import 'package:appbesaz/modules/UserAccountModule/registerPage.dart';
 import 'package:appbesaz/modules/UserAccountModule/userAccountModule.dart';
 import 'package:appbesaz/modules/contentModule.dart';
 import 'package:appbesaz/modules/emailModule.dart';
+import 'package:appbesaz/modules/musicModule/musicPlayer.dart';
 import 'package:appbesaz/modules/zarinpalModule.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:appbesaz/modules/ListModule/listModule.dart';
 import 'package:appbesaz/modules/ListModule/listTileModule.dart';
 import 'package:appbesaz/modules/module.dart';
 import 'package:appbesaz/modules/siteModule.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:latlng/latlng.dart';
 import 'modules/callModule.dart';
 import 'package:appbesaz/modules/settingsModule.dart';
@@ -151,17 +154,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    
     ContentModule cmm = new ContentModule(
+      id: moduleList.length,
+      index: moduleList.length,
+      contentModuleList: [uam, em, c],
+      mainSetState: () {
+        setState(() {});
+      },
+    );
 
-        id: moduleList.length,
-        index: moduleList.length,
-        contentModuleList: [uam, em, c],
-        mainSetState: (){setState(() {
-          
-        });},
-        );
-   
     // SettingsModule sm = new SettingsModule(
     //   id: moduleList.length,
     //   index: moduleList.length,
@@ -249,7 +250,31 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-             cmm.addModule(s);
+            //  cmm.addModule(s);
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FeedReaderModule(
+                          id: moduleList.length,
+                          index: moduleList.length,
+                          imageName: '',
+                          siteLink: 'farsnews.ir',
+                        )));
+
+                        
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => MusicPlayer(
+            //             song: AudioPlayer()
+            //               ..setAsset(
+            //                 'assets/songs/a.mp3',
+            //               ),
+            //               songName: 'Mah o Mahi',
+            //               imageName: wallpapers[3],
+            //                filePath: 'assets/songs/a.mp3',)));
+
             // print(premiumPlanMonthly.description);
             // print(premiumPlanYearly.description);
             // Navigator.push(
