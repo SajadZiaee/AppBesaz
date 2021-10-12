@@ -1,5 +1,6 @@
 import 'package:appbesaz/modules/ContactUsModule/contactMap.dart';
 import 'package:appbesaz/modules/ContactUsModule/contactUs.dart';
+import 'package:appbesaz/modules/musicModule/musicModule.dart';
 import 'package:appbesaz/modules/rssReaderModule.dart';
 import 'package:appbesaz/modules/UserAccountModule/%20entities.dart';
 import 'package:appbesaz/modules/UserAccountModule/registerPage.dart';
@@ -252,28 +253,38 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {
             //  cmm.addModule(s);
 
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => FeedReaderModule(
-                          id: moduleList.length,
-                          index: moduleList.length,
-                          imageName: '',
-                          siteLink: 'farsnews.ir',
-                        )));
-
-                        
             // Navigator.push(
             //     context,
             //     MaterialPageRoute(
-            //         builder: (context) => MusicPlayer(
-            //             song: AudioPlayer()
-            //               ..setAsset(
-            //                 'assets/songs/a.mp3',
-            //               ),
-            //               songName: 'Mah o Mahi',
-            //               imageName: wallpapers[3],
-            //                filePath: 'assets/songs/a.mp3',)));
+            //         builder: (context) => FeedReaderModule(
+            //               id: moduleList.length,
+            //               index: moduleList.length,
+            //               imageName: '',
+            //               siteLink: 'farsnews.ir',
+            //             )));
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MusicModule(
+                          id: moduleList.length,
+                          index: moduleList.length,
+                          songList: [
+                            Song(
+                                songPath: 'assets/songs/a.mp3',
+                                songName: 'mah o mahi',
+                                imageName: wallpapers[1]),
+                            Song(
+                                songPath: 'assets/songs/b.mp3',
+                                songName: 'Sheydaei',
+                                imageName: wallpapers[6]),
+                          ],
+                          imageName: wallpapers[5],
+                          title: 'music module',
+                        )));
+
+            // Navigator.push(
+            //     context, MaterialPageRoute(builder: (context) => test()));
 
             // print(premiumPlanMonthly.description);
             // print(premiumPlanYearly.description);

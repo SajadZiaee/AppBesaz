@@ -37,6 +37,8 @@ dependencies:
   webfeed: ^0.7.0
   http: ^0.13.4
   just_audio: ^0.9.12
+  responsive_builder: ^0.4.1
+  
   
 
 dev_dependencies:
