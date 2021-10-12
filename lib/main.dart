@@ -152,6 +152,13 @@ class _MyHomePageState extends State<MyHomePage> {
       title: 'ایمیل بزن',
       emailAddress: 'dayan.acorn@gmail.com',
       emailSubject: 'emailSubject');
+  FeedReaderModule frm = new FeedReaderModule(
+    id: moduleList.length,
+    index: moduleList.length,
+    siteLink: 'zoomg.ir',
+    imageName: wallpapers[4],
+    title: 'اخبار',
+  );
 
   @override
   Widget build(BuildContext context) {

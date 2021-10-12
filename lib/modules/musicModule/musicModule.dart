@@ -2,6 +2,7 @@ import 'package:appbesaz/modules/UserAccountModule/%20entities.dart';
 import 'package:flutter/material.dart';
 import 'package:appbesaz/modules/module.dart';
 import 'package:just_audio/just_audio.dart';
+import '../constants.dart';
 import 'musicPlayer.dart';
 
 class Song {
@@ -64,7 +65,6 @@ class MusicModuleState extends State<MusicModule> {
     else
       widget.currentSong = widget.songList.length - 1;
 
-
     setState(() {
       widget.player.setAsset(widget.songList[widget.currentSong].songPath);
     });
@@ -74,19 +74,43 @@ class MusicModuleState extends State<MusicModule> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: MusicPlayer(
-          nextSong: () {
-            this.nextSong();
-          },
-          previousSong: () {
-            this.previousSong();
-          },
-          song: widget.player,
-          songName: widget.songList[widget.currentSong].songName,
-          imageName: widget.songList[widget.currentSong].imageName,
-        ));
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: ListView.builder(
+        itemCount: widget.songList.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 60,
+                child: Row(
+                  children: [
+                    Container(
+                      height: 60,
+                      width: 60,
+                      child: (widget.songList[index].imageName != '')
+                          ? Image.asset(widget.songList[index].imageName)
+                          : Image.asset(wallpapers[0]),
+                    ),
+                    Text(widget.songList[index].songName)
+                  ],
+                )),
+            onTap: () {
+              widget.currentSong = index;
+              widget.player
+                  .setAsset(widget.songList[widget.currentSong].songPath);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MusicPlayer(
+                            currentSong: index,
+                            songList: widget.songList,
+                          )));
+            },
+          );
+        },
+      ),
+    );
   }
 }

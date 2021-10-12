@@ -1,24 +1,55 @@
 import 'package:appbesaz/modules/constants.dart';
+import 'package:appbesaz/modules/musicModule/musicModule.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:webfeed/domain/media/media.dart';
 
 class MusicPlayer extends StatefulWidget {
-  String imageName;
-  AudioPlayer song;
-  String songName;
-  Function nextSong;
-  Function previousSong;
+  late String imageName;
+  late AudioPlayer song;
+  late String songName;
+  List<Song> songList;
+  int currentSong;
+  late Function nextSong;
+  late Function previousSong;
   MusicPlayer({
-    required this.song,
-    required this.songName,
-    required this.nextSong,
-    required this.previousSong,
-    this.imageName = '',
-  });
+    required this.songList,
+    required this.currentSong,
+  }) {
+    nextSong = () {
+      if (currentSong != songList.length - 1) {
+        currentSong++;
+      } else {
+        currentSong = 0;
+      }
+      imageName = songList[currentSong].imageName;
+      songName = songList[currentSong].songName;
+      song.stop();
+      song = AudioPlayer()..setAsset(songList[currentSong].songPath);
+      song.play();
+    };
+
+    previousSong = () {
+      if (currentSong != 0)
+        currentSong--;
+      else
+        currentSong = songList.length - 1;
+
+      imageName = songList[currentSong].imageName;
+      songName = songList[currentSong].songName;
+      song.stop();
+      song = AudioPlayer()..setAsset(songList[currentSong].songPath);
+      song.play();
+    };
+  }
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
+    song = AudioPlayer()..setAsset(songList[currentSong].songPath);
+    imageName = songList[currentSong].imageName;
+    songName = songList[currentSong].songName;
     return MusicPlayerState();
   }
 }
@@ -27,6 +58,7 @@ class MusicPlayerState extends State<MusicPlayer> {
   @override
   void initState() {
     // TODO: implement initState
+
     widget.song.play();
     super.initState();
   }
@@ -43,6 +75,7 @@ class MusicPlayerState extends State<MusicPlayer> {
     // TODO: implement build
 
     String audioLength = '0';
+
     double getDuration() {
       if (widget.song.duration == null)
         return 0;
@@ -50,13 +83,14 @@ class MusicPlayerState extends State<MusicPlayer> {
         return widget.song.duration!.inSeconds.toDouble();
     }
 
-    widget.song.playerStateStream.listen((event) async{
+    widget.song.playerStateStream.listen((event) async {
       if (event.processingState == ProcessingState.completed) {
         // song has ended playing.
         if (getDuration() == widget.song.position.inSeconds.toDouble()) {
           await widget.song.seek(Duration.zero);
-          widget.nextSong();
-          
+          setState(() {
+            widget.nextSong();
+          });
         }
       }
     });
@@ -117,8 +151,7 @@ class MusicPlayerState extends State<MusicPlayer> {
         return OrientationLayoutBuilder(
           portrait: (context) {
             print('mobile portrait');
-            print(MediaQuery.of(context).size.height /
-                MediaQuery.of(context).size.width);
+
             return Container(
                 width: MediaQuery.of(context).size.width * 0.80,
                 height: MediaQuery.of(context).size.width * 0.80,
@@ -198,12 +231,16 @@ class MusicPlayerState extends State<MusicPlayer> {
                             child: Icon(Icons.pause)),
                         ElevatedButton(
                             onPressed: () async {
-                              widget.previousSong();
+                              setState(() {
+                                widget.previousSong();
+                              });
                             },
                             child: Icon(Icons.skip_previous_rounded)),
                         ElevatedButton(
                             onPressed: () async {
-                              widget.nextSong();
+                              setState(() {
+                                widget.nextSong();
+                              });
                             },
                             child: Icon(Icons.skip_next_rounded)),
                         ElevatedButton(
@@ -257,12 +294,16 @@ class MusicPlayerState extends State<MusicPlayer> {
                             child: Icon(Icons.pause)),
                         ElevatedButton(
                             onPressed: () async {
-                              widget.previousSong();
+                              setState(() {
+                                widget.previousSong();
+                              });
                             },
                             child: Icon(Icons.skip_previous_rounded)),
                         ElevatedButton(
                             onPressed: () async {
-                              widget.nextSong();
+                              setState(() {
+                                widget.nextSong();
+                              });
                             },
                             child: Icon(Icons.skip_next_rounded)),
                         ElevatedButton(
@@ -323,12 +364,16 @@ class MusicPlayerState extends State<MusicPlayer> {
                                 child: Icon(Icons.pause)),
                             ElevatedButton(
                                 onPressed: () async {
-                                  widget.previousSong();
+                                  setState(() {
+                                    widget.previousSong();
+                                  });
                                 },
                                 child: Icon(Icons.skip_previous_rounded)),
                             ElevatedButton(
                                 onPressed: () async {
-                                  widget.nextSong();
+                                  setState(() {
+                                    widget.nextSong();
+                                  });
                                 },
                                 child: Icon(Icons.skip_next_rounded)),
                             ElevatedButton(
@@ -384,12 +429,16 @@ class MusicPlayerState extends State<MusicPlayer> {
                                 child: Icon(Icons.pause)),
                             ElevatedButton(
                                 onPressed: () async {
-                                  widget.previousSong();
+                                  setState(() {
+                                    widget.previousSong();
+                                  });
                                 },
                                 child: Icon(Icons.skip_previous_rounded)),
                             ElevatedButton(
                                 onPressed: () async {
-                                  widget.nextSong();
+                                  setState(() {
+                                    widget.nextSong();
+                                  });
                                 },
                                 child: Icon(Icons.skip_next_rounded)),
                             ElevatedButton(
@@ -429,22 +478,26 @@ class MusicPlayerState extends State<MusicPlayer> {
             // mobile portrait
 
             return Column(children: [
-              StreamBuilder<Duration?>(
-                  stream: widget.song.positionStream,
-                  builder: (context, snapshot) {
-                    return Slider(
-                      value: snapshot.data!.inSeconds.toDouble(),
-                      onChanged: (double newValue) {
-                        if (newValue <= getDuration())
-                          setState(() {
-                            widget.song
-                                .seek(Duration(seconds: newValue.toInt()));
-                          });
-                      },
-                      min: 0,
-                      max: getDuration(),
-                    );
-                  }),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                // height: MediaQuery.of(context).size.height / 8,
+                child: StreamBuilder<Duration?>(
+                    stream: widget.song.positionStream,
+                    builder: (context, snapshot) {
+                      return Slider(
+                        value: snapshot.data!.inSeconds.toDouble(),
+                        onChanged: (double newValue) {
+                          if (newValue <= getDuration())
+                            setState(() {
+                              widget.song
+                                  .seek(Duration(seconds: newValue.toInt()));
+                            });
+                        },
+                        min: 0,
+                        max: getDuration(),
+                      );
+                    }),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [currentTime, endTime],
@@ -454,29 +507,32 @@ class MusicPlayerState extends State<MusicPlayer> {
           landscape: (context) {
             // mobile landscape
             return Column(children: [
-              StreamBuilder<Duration?>(
-                  stream: widget.song.positionStream,
-                  builder: (context, snapshot) {
-                    return Slider(
-                      value: snapshot.data!.inSeconds.toDouble(),
-                      onChanged: (double newValue) {
-                        if (newValue <= getDuration())
-                          setState(() {
-                            widget.song
-                                .seek(Duration(seconds: newValue.toInt()));
-                          });
-                      },
-                      min: 0,
-                      max: getDuration(),
-                    );
-                  }),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 2,
+                child: StreamBuilder<Duration?>(
+                    stream: widget.song.positionStream,
+                    builder: (context, snapshot) {
+                      return Slider(
+                        value: snapshot.data!.inSeconds.toDouble(),
+                        onChanged: (double newValue) {
+                          if (newValue <= getDuration())
+                            setState(() {
+                              widget.song
+                                  .seek(Duration(seconds: newValue.toInt()));
+                            });
+                        },
+                        min: 0,
+                        max: getDuration(),
+                      );
+                    }),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   currentTime,
                   endTime,
                 ],
-              )
+              ),
             ]);
           },
         );
@@ -583,9 +639,7 @@ class MusicPlayerState extends State<MusicPlayer> {
                     shrinkWrap: true,
                     children: [
                       controlButtons,
-                      Expanded(
-                        child: timeSlider,
-                      ),
+                      timeSlider,
                     ],
                   ),
                 ]);
@@ -596,15 +650,23 @@ class MusicPlayerState extends State<MusicPlayer> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [songArtwork, Text(widget.songName)]),
-                Column(
+                Expanded(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [songArtwork, Text(widget.songName)]),
+                ),
+                Expanded(
+                    child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [controlButtons, timeSlider],
-                )
+                  children: [
+                    controlButtons,
+                    Expanded(
+                      child: timeSlider,
+                    ),
+                  ],
+                )),
               ],
             );
           },
